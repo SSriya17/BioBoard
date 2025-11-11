@@ -1,0 +1,190 @@
+{
+  "training_date": "2025-11-11 04:20:00",
+  "models": {
+    "nutritional_targets": {
+      "calories_r2": 0.01528222426349346,
+      "calories_mae": 482.6749375863246,
+      "protein_r2": 0.01528222426349346,
+      "protein_mae": 18.10031015948717,
+      "carbs_r2": 0.01528222426349346,
+      "carbs_mae": 60.33436719829057,
+      "fats_r2": 0.015282224263493238,
+      "fats_mae": 18.77069201724595,
+      "training_samples": 1000,
+      "test_prediction": {
+        "calories": 2463,
+        "protein": 92,
+        "carbs": 307,
+        "fats": 95
+      }
+    },
+    "meal_recommendations": {
+      "total_meals": 21,
+      "cuisines": [
+        "Mexican",
+        "Chinese",
+        "Italian",
+        "Indian"
+      ],
+      "diet_types": [
+        "Balanced",
+        "Low_Carb",
+        "Low_Sodium"
+      ],
+      "test_recommendation": [
+        {
+          "name": "Black Bean Burrito Bowl",
+          "calories": 520,
+          "protein": 20,
+          "carbs": 65,
+          "fats": 18,
+          "restrictions": "None",
+          "cuisine": "Mexican",
+          "diet": "Balanced",
+          "calorie_diff": 146.66666666666663
+        },
+        {
+          "name": "Grilled Chicken Tacos",
+          "calories": 450,
+          "protein": 35,
+          "carbs": 40,
+          "fats": 15,
+          "restrictions": "None",
+          "cuisine": "Mexican",
+          "diet": "Balanced",
+          "calorie_diff": 216.66666666666663
+        },
+        {
+          "name": "Grilled Steak with Vegetables",
+          "calories": 420,
+          "protein": 40,
+          "carbs": 12,
+          "fats": 20,
+          "restrictions": "None",
+          "cuisine": "Mexican",
+          "diet": "Low_Carb",
+          "calorie_diff": 246.66666666666663
+        }
+      ]
+    },
+    "workout_plan": {
+      "accuracy": 0.5008692571929285,
+      "training_samples": 214551,
+      "classes": [
+        "Endurance",
+        "General Fitness",
+        "Muscle Gain",
+        "Weight Loss"
+      ],
+      "classification_report": {
+        "Endurance": {
+          "precision": 0.453125,
+          "recall": 0.000455738374742665,
+          "f1-score": 0.0009105609369358055,
+          "support": 63633.0
+        },
+        "General Fitness": {
+          "precision": 0.5008835034291123,
+          "recall": 0.9997673509650282,
+          "f1-score": 0.6673997111307832,
+          "support": 107458.0
+        },
+        "Muscle Gain": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 21804.0
+        },
+        "Weight Loss": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 21656.0
+        },
+        "accuracy": 0.5008692571929285,
+        "macro avg": {
+          "precision": 0.23850212585727806,
+          "recall": 0.25005577233494275,
+          "f1-score": 0.16707756801692975,
+          "support": 214551.0
+        },
+        "weighted avg": {
+          "precision": 0.3852587153473325,
+          "recall": 0.5008692571929285,
+          "f1-score": 0.33453761521872066,
+          "support": 214551.0
+        }
+      },
+      "test_workout": [
+        {
+          "day": "Day 1",
+          "focus": "Full Body A",
+          "exercises": [
+            "Goblet Squat 4x10",
+            "Push-ups 4xAMRAP",
+            "Rows 4x10",
+            "Plank 3x45s"
+          ]
+        },
+        {
+          "day": "Day 2",
+          "focus": "Cardio 30-40",
+          "exercises": [
+            "Zone 2 steady 30-40 min"
+          ]
+        },
+        {
+          "day": "Day 3",
+          "focus": "Full Body B",
+          "exercises": [
+            "Deadlift 4x6",
+            "Overhead Press 4x8",
+            "Lat Pulldown 4x10",
+            "Side Plank 3x30s/side"
+          ]
+        },
+        {
+          "day": "Day 4",
+          "focus": "Intervals + Steps",
+          "exercises": [
+            "6x1 min hard / 2 min easy",
+            "8-10k steps"
+          ]
+        }
+      ]
+    },
+    "progress_forecast": {
+      "r2_score": 0.9999950638112743,
+      "mae": 0.04880008212864329,
+      "training_samples": 213616,
+      "coefficients": [
+        7.620116740177958e-07,
+        0.9999790345475088,
+        -2.3544478738249286e-05,
+        -3.1479850397859316e-08
+      ],
+      "test_forecast": [
+        {
+          "date": "2024-01-25",
+          "predicted_weight": 56.3,
+          "predicted_bmi": 20.6
+        },
+        {
+          "date": "2024-02-01",
+          "predicted_weight": 56.3,
+          "predicted_bmi": 20.6
+        },
+        {
+          "date": "2024-02-08",
+          "predicted_weight": 56.3,
+          "predicted_bmi": 20.6
+        },
+        {
+          "date": "2024-02-15",
+          "predicted_weight": 56.3,
+          "predicted_bmi": 20.6
+        }
+      ]
+    }
+  }
+}
