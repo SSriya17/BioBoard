@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Logo from './Logo'
+import Header from './Header'
 import '../App.css'
 
 function Dashboard() {
@@ -26,7 +26,7 @@ function Dashboard() {
     <div style={{ minHeight: '100vh', padding: '40px 20px 100px 20px' }}>
       {/* Header */}
       <div className="page-header">
-        <div style={{ marginBottom: '16px' }}><Logo variant="light" width={220} /></div>
+        <Header variant="light" circular={true} />
         <h1>PERSONALIZED HEALTH</h1>
       </div>
 
@@ -82,7 +82,7 @@ function Dashboard() {
           <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px', flex: 1 }}>
             Custom Lifting Program
           </p>
-          <button className="btn-primary" style={{ marginTop: 'auto' }}>
+          <button className="btn-primary" style={{ marginTop: 'auto' }} onClick={() => navigate('/workout')}>
             View plan
           </button>
         </div>
@@ -95,7 +95,7 @@ function Dashboard() {
           <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px', flex: 1 }}>
             12-Week Projection
           </p>
-          <button className="btn-primary" style={{ marginTop: 'auto' }}>
+          <button className="btn-primary" style={{ marginTop: 'auto' }} onClick={() => navigate('/progress')}>
             View plan
           </button>
         </div>
@@ -103,7 +103,7 @@ function Dashboard() {
 
       {/* Footer */}
       <div className="footer">
-        <Logo variant="dark" width={160} />
+        <Header variant="dark" />
       </div>
     </div>
   )

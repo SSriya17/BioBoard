@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Logo from './Logo'
+import Header from './Header'
 import '../App.css'
 
 function NutritionDetail() {
@@ -82,7 +82,7 @@ function NutritionDetail() {
     <div style={{ minHeight: '100vh', padding: '40px 20px 100px 20px', maxWidth: '1000px', margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
-        <div style={{ marginBottom: '16px' }}><Logo variant="light" width={220} /></div>
+        <Header variant="light" />
         <h1>PERSONALIZED HEALTH</h1>
       </div>
 
@@ -157,7 +157,7 @@ function NutritionDetail() {
 
       {/* Footer */}
       <div className="footer">
-        <Logo variant="dark" width={160} />
+        <Header variant="dark" />
       </div>
     </div>
   )

@@ -1,20 +1,61 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 
-function Logo({ variant = 'light', width = 180 }) {
-  // variant: 'light' => white on dark backgrounds (invert)
-  // variant: 'dark' => dark on light backgrounds (original colors)
-  const isLight = variant === 'light'
+function Logo({ variant = 'light', width = 260, circular = false }) {
+  // Render exactly the provided image. Place your file at public/logo-wave.png
+  const [srcIndex, setSrcIndex] = useState(0)
+  
+  // Use different logo sources based on variant
+  // Light variant (header) uses inverted logo, dark variant (footer) uses bioboard.png
+  const lightSources = [
+    '/inverted-logo-color.png',
+    '/logo-wave.png',
+    '/bioboard-logo.png',
+    '/logo-wave.svg',
+    '/logo.png',
+    '/bioboard.jpg',
+  ]
+  
+  const darkSources = [
+    '/bioboard.png',
+    '/BioBoard Logo.png',
+    '/logo-wave.png',
+    '/bioboard-logo.png',
+    '/logo-wave.svg',
+    '/logo.png',
+    '/bioboard.jpg',
+  ]
+  
+  const sources = variant === 'dark' ? darkSources : lightSources
+  const src = sources[srcIndex] || sources[0]
+  const [hidden, setHidden] = useState(false)
+
+  const handleError = useCallback(() => {
+    // Try next candidate filename
+    setSrcIndex((i) => {
+      const currentSources = variant === 'dark' ? darkSources : lightSources
+      const next = i + 1
+      if (next >= currentSources.length) {
+        setHidden(true)
+      }
+      return next
+    })
+  }, [variant])
+
   return (
-    <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div className="logo" style={{ display: 'inline-flex', alignItems: 'center' }}>
       <img
-        src="/bioboard-logo.png"
-        alt="BioBoard"
+        src={src}
+        alt=""
         style={{
           width,
-          height: 'auto',
-          // Invert for white-on-black header
-          filter: isLight ? 'invert(1) hue-rotate(180deg) saturate(0)' : 'none',
+          height: circular ? width : 'auto',
+          display: hidden ? 'none' : 'block',
+          objectFit: circular ? 'cover' : 'contain',
+          borderRadius: circular ? '50%' : 0,
+          // Show the image exactly as provided; no color transforms
+          filter: 'none',
         }}
+        onError={handleError}
       />
     </div>
   )
