@@ -75,7 +75,6 @@ function NutritionDetail() {
         padding: '40px 20px'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '24px' }}>🍽️</div>
           <div style={{ fontSize: '24px', fontWeight: '600', marginBottom: '16px' }}>
             Loading Your Personalized Meal Plan...
           </div>

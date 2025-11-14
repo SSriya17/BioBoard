@@ -73,7 +73,6 @@ function Dashboard() {
         <div className="form-container stagger-1" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '600' }}>Nutrition</h2>
-            <span style={{ fontSize: '24px' }}>🍴</span>
           </div>
           <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px', flex: 1 }}>
             Custom Meal Plan & Targets
@@ -91,7 +90,6 @@ function Dashboard() {
         <div className="form-container stagger-2" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '600' }}>Workout Regimen</h2>
-            <span style={{ fontSize: '24px' }}>🏋️</span>
           </div>
           <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px', flex: 1 }}>
             Custom Lifting Program

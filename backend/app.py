@@ -215,7 +215,7 @@ def load_models():
 @app.route('/', methods=['GET'])
 def home():
     """Home endpoint"""
-    return "✅ Bioboard API is running!"
+    return "Bioboard API is running!"
 
 @app.route('/api/health', methods=['GET'])
 def health():
