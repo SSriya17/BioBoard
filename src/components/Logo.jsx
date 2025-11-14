@@ -5,9 +5,10 @@ function Logo({ variant = 'light', width = 260, circular = false }) {
   const [srcIndex, setSrcIndex] = useState(0)
   
   // Use different logo sources based on variant
-  // Light variant (header) uses inverted logo, dark variant (footer) uses bioboard.png
+  // Light variant (header) uses inverted-logo-color.png, dark variant (footer) uses inverted-logo-color.png
   const lightSources = [
     '/inverted-logo-color.png',
+    '/BioBoard Logo.png',
     '/logo-wave.png',
     '/bioboard-logo.png',
     '/logo-wave.svg',
@@ -16,8 +17,8 @@ function Logo({ variant = 'light', width = 260, circular = false }) {
   ]
   
   const darkSources = [
+    '/inverted-logo-color.png',
     '/bioboard.png',
-    '/BioBoard Logo.png',
     '/logo-wave.png',
     '/bioboard-logo.png',
     '/logo-wave.svg',

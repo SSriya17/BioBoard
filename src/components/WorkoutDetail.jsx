@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from './Header'
+import Logo from './Logo'
 import '../App.css'
+import { getWorkoutPlan } from '../services/api'
 
 function generateWorkoutPlan(user) {
   const goal = user.fitnessGoal || 'General Fitness'
@@ -47,23 +49,61 @@ function generateWorkoutPlan(user) {
 
 function WorkoutDetail() {
   const [userData, setUserData] = useState(null)
+  const [plan, setPlan] = useState(null)
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
     const data = localStorage.getItem('userData')
     if (data) {
-      setUserData(JSON.parse(data))
+      const parsed = JSON.parse(data)
+      setUserData(parsed)
+      loadWorkoutPlan(parsed)
     } else {
       navigate('/')
     }
   }, [navigate])
 
-  if (!userData) return <div>Loading...</div>
+  const loadWorkoutPlan = async (userData) => {
+    setLoading(true)
+    try {
+      const apiPlan = await getWorkoutPlan(
+        userData.fitnessGoal || 'General Fitness',
+        userData.activityLevel || 'Moderate'
+      )
+      
+      if (apiPlan && apiPlan.length > 0) {
+        // Convert API format to frontend format
+        const formattedPlan = apiPlan.map(day => ({
+          day: day.day,
+          focus: day.focus,
+          details: day.details || day.exercises || []
+        }))
+        setPlan(formattedPlan)
+      } else {
+        // Fallback to frontend workout plan
+        const { plan: fallbackPlan } = generateWorkoutPlan(userData)
+        setPlan(fallbackPlan)
+      }
+    } catch (error) {
+      console.error('Error loading workout plan:', error)
+      // Fallback to frontend workout plan
+      const { plan: fallbackPlan } = generateWorkoutPlan(userData)
+      setPlan(fallbackPlan)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const { daysPerWeek, goal, activity, plan } = generateWorkoutPlan(userData)
+  if (!userData || loading) return <div>Loading...</div>
+  if (!plan) return <div>Error loading workout plan</div>
+
+  const goal = userData.fitnessGoal || 'General Fitness'
+  const activity = userData.activityLevel || 'Moderate'
+  const daysPerWeek = plan.length
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 20px 100px 20px', maxWidth: 1000, margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', padding: '40px 20px 160px 20px', maxWidth: 1000, margin: '0 auto' }}>
       <div className="page-header">
         <Header variant="light" />
         <h1>PERSONALIZED HEALTH</h1>
@@ -73,29 +113,29 @@ function WorkoutDetail() {
         ← Back to Dashboard
       </button>
 
-      <div className="form-container" style={{ marginBottom: 24 }}>
+      <div className="form-container fade-in" style={{ marginBottom: 24 }}>
         <h2 style={{ marginBottom: 12, fontSize: 24, fontWeight: 600 }}>Workout Regimen</h2>
         <div style={{ color: 'rgba(255,255,255,0.8)', marginBottom: 8 }}>
           Goal: <strong>{goal}</strong> • Activity Level: <strong>{activity}</strong> • Target Days/Week: <strong>{daysPerWeek}</strong>
         </div>
       </div>
 
-      <div className="form-container">
-        {plan.slice(0, daysPerWeek).map((block, idx) => (
-          <div key={idx} style={{ marginBottom: idx < daysPerWeek - 1 ? 24 : 0 }}>
+      <div className="form-container scale-in" style={{ paddingBottom: '48px', marginBottom: '40px' }}>
+        {plan.map((block, idx) => (
+          <div key={idx} className="fade-in" style={{ marginBottom: idx < plan.length - 1 ? 24 : 16, animationDelay: `${idx * 0.1}s`, opacity: 0 }}>
             <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>{block.day} — {block.focus}</div>
-            <ul style={{ paddingLeft: 18 }}>
+            <ul style={{ paddingLeft: 18, marginBottom: idx < plan.length - 1 ? 0 : 8 }}>
               {block.details.map((d, i) => (
                 <li key={i} style={{ marginBottom: 4 }}>{d}</li>
               ))}
             </ul>
-            {idx < daysPerWeek - 1 && <div style={{ width: '100%', height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginTop: 16 }}></div>}
+            {idx < plan.length - 1 && <div style={{ width: '100%', height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginTop: 16 }}></div>}
           </div>
         ))}
       </div>
 
       <div className="footer">
-        <Header variant="dark" />
+        <Logo variant="dark" width={110} />
       </div>
     </div>
   )

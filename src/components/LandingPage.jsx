@@ -1,11 +1,16 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Header from './Header'
+import Logo from './Logo'
 import '../App.css'
 
 function LandingPage() {
-  const [step, setStep] = useState(1)
-  const [formData, setFormData] = useState({
+  const location = useLocation()
+  const isEditMode = location.pathname === '/profile'
+  
+  // Initialize form data from localStorage if editing, otherwise empty
+  const existingData = localStorage.getItem('userData')
+  const initialFormData = isEditMode && existingData ? JSON.parse(existingData) : {
     age: '',
     weight: '',
     heightFeet: '',
@@ -14,7 +19,10 @@ function LandingPage() {
     fitnessGoal: '',
     dietaryPreferences: '',
     mealsPerDay: ''
-  })
+  }
+  
+  const [step, setStep] = useState(isEditMode ? 1 : 0) // Skip splash screen if editing
+  const [formData, setFormData] = useState(initialFormData)
   const navigate = useNavigate()
 
   const handleInputChange = (field, value) => {
@@ -25,7 +33,10 @@ function LandingPage() {
   }
 
   const handleNext = () => {
-    if (step < 3) {
+    if (step === 0) {
+      // Move from splash to form
+      setStep(1)
+    } else if (step < 3) {
       setStep(step + 1)
     } else {
       // Save to localStorage and navigate to dashboard
@@ -51,20 +62,86 @@ function LandingPage() {
     return false
   }
 
+  // Splash Screen (only show if not in edit mode)
+  if (step === 0 && !isEditMode) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: '40px 20px'
+      }}>
+        {/* Animated Logo */}
+        <div className="splash-logo" style={{ marginBottom: '40px' }}>
+          <Logo variant="light" width={200} />
+        </div>
+
+        {/* Animated Title */}
+        <div className="splash-title" style={{ marginBottom: '60px' }}>
+          <h1 style={{ 
+            fontSize: '36px', 
+            fontWeight: '600', 
+            textAlign: 'center',
+            letterSpacing: '2px'
+          }}>
+            PERSONALIZED HEALTH APP
+          </h1>
+        </div>
+
+        {/* Start Button */}
+        <div className="splash-button" style={{ marginTop: '20px' }}>
+          <button 
+            className="btn-primary" 
+            onClick={handleNext}
+            style={{ 
+              padding: '16px 48px', 
+              fontSize: '18px',
+              minWidth: '200px'
+            }}
+          >
+            Input Your Data
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="footer">
+          <Logo variant="dark" width={110} />
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 20px 100px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', padding: '40px 20px 120px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {/* Header */}
       <div className="page-header">
         <Header variant="light" />
-        <h1>PERSONALIZED HEALTH</h1>
+        <h1>{isEditMode ? 'EDIT PROFILE' : 'PERSONALIZED HEALTH'}</h1>
       </div>
+
+      {/* Back to Dashboard button if editing */}
+      {isEditMode && (
+        <button
+          className="btn-primary"
+          onClick={() => navigate('/dashboard')}
+          style={{ 
+            marginBottom: '24px',
+            padding: '10px 20px', 
+            fontSize: '14px'
+          }}
+        >
+          ← Back to Dashboard
+        </button>
+      )}
 
       {/* Step Indicator */}
       <div className="step-indicator">Step {step} of 3</div>
       <div className="step-divider"></div>
 
       {/* Form Container */}
-      <div className="form-container">
+      <div className="form-container fade-in">
         {step === 1 && (
           <>
             <div className="form-group">
@@ -72,18 +149,19 @@ function LandingPage() {
               <input
                 type="number"
                 className="input-field"
-                placeholder="ageinput"
                 value={formData.age}
+                min="0"
                 onChange={(e) => handleInputChange('age', e.target.value)}
               />
             </div>
             <div className="form-group">
-              <label>Weight</label>
+              <label>Weight (lbs)</label>
               <input
                 type="number"
                 className="input-field"
-                placeholder="weightinput"
                 value={formData.weight}
+                min="0"
+                step="0.1"
                 onChange={(e) => handleInputChange('weight', e.target.value)}
               />
             </div>
@@ -94,8 +172,10 @@ function LandingPage() {
                   <input
                     type="number"
                     className="input-field"
-                    placeholder="feet"
+                    placeholder="Feet"
                     value={formData.heightFeet}
+                    min="0"
+                    max="8"
                     onChange={(e) => handleInputChange('heightFeet', e.target.value)}
                   />
                 </div>
@@ -103,8 +183,10 @@ function LandingPage() {
                   <input
                     type="number"
                     className="input-field"
-                    placeholder="inches"
+                    placeholder="Inches"
                     value={formData.heightInches}
+                    min="0"
+                    max="11"
                     onChange={(e) => handleInputChange('heightInches', e.target.value)}
                   />
                 </div>
@@ -207,7 +289,7 @@ function LandingPage() {
 
       {/* Footer */}
       <div className="footer">
-        <Header variant="dark" />
+        <Logo variant="dark" width={110} />
       </div>
     </div>
   )

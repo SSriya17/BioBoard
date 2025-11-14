@@ -25,9 +25,12 @@ body {
   min-height: 100vh;
   background-color: #000000;
   color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  position: relative;
 }

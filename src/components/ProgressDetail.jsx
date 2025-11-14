@@ -1,7 +1,9 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from './Header'
+import Logo from './Logo'
 import '../App.css'
+import { getProgressForecast } from '../services/api'
 
 // Simple projection logic: estimate weekly change from goal and activity
 function useProjection(user) {
@@ -40,17 +42,102 @@ function useProjection(user) {
 
 function ProgressDetail() {
   const [userData, setUserData] = useState(null)
+  const [forecastData, setForecastData] = useState(null)
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
     const data = localStorage.getItem('userData')
-    if (data) setUserData(JSON.parse(data))
-    else navigate('/')
+    if (data) {
+      const parsed = JSON.parse(data)
+      setUserData(parsed)
+      loadProgressForecast(parsed)
+    } else {
+      navigate('/')
+    }
   }, [navigate])
 
-  const { weeklyDelta, points } = useProjection(userData || {})
+  const loadProgressForecast = async (userData) => {
+    setLoading(true)
+    try {
+      const apiForecast = await getProgressForecast(
+        userData.weight,
+        userData.fitnessGoal || 'General Fitness',
+        userData.activityLevel || 'Moderate',
+        12
+      )
+      
+      if (apiForecast && apiForecast.points) {
+        setForecastData(apiForecast)
+      } else {
+        // Fallback to frontend projection
+        const weight = parseFloat(userData.weight) || 165
+        const goal = userData.fitnessGoal || 'General Fitness'
+        const activity = userData.activityLevel || 'Moderate'
+        const weeks = 12
+        
+        const base = {
+          'Weight Loss': -0.75,
+          'Muscle Gain': 0.35,
+          'Endurance': -0.25,
+          'General Fitness': -0.10,
+        }[goal] ?? -0.10
+        
+        const activityAdj = {
+          Sedentary: 0.8,
+          Light: 0.9,
+          Moderate: 1.0,
+          Active: 1.1,
+          'Very Active': 1.2,
+        }[activity] ?? 1.0
+        
+        const weeklyDelta = base * activityAdj
+        const points = Array.from({ length: weeks + 1 }, (_, i) => ({
+          week: i,
+          weight: +(weight + weeklyDelta * i).toFixed(1),
+        }))
+        
+        setForecastData({ weeklyDelta, points })
+      }
+    } catch (error) {
+      console.error('Error loading progress forecast:', error)
+      // Fallback to frontend projection
+      const weight = parseFloat(userData.weight) || 165
+      const goal = userData.fitnessGoal || 'General Fitness'
+      const activity = userData.activityLevel || 'Moderate'
+      const weeks = 12
+      
+      const base = {
+        'Weight Loss': -0.75,
+        'Muscle Gain': 0.35,
+        'Endurance': -0.25,
+        'General Fitness': -0.10,
+      }[goal] ?? -0.10
+      
+      const activityAdj = {
+        Sedentary: 0.8,
+        Light: 0.9,
+        Moderate: 1.0,
+        Active: 1.1,
+        'Very Active': 1.2,
+      }[activity] ?? 1.0
+      
+      const weeklyDelta = base * activityAdj
+      const points = Array.from({ length: weeks + 1 }, (_, i) => ({
+        week: i,
+        weight: +(weight + weeklyDelta * i).toFixed(1),
+      }))
+      
+      setForecastData({ weeklyDelta, points })
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  if (!userData) return <div>Loading...</div>
+  if (!userData || loading) return <div>Loading...</div>
+  if (!forecastData) return <div>Error loading progress forecast</div>
+
+  const { weeklyDelta, points } = forecastData
 
   // Prepare a lightweight SVG chart (no external deps)
   const Chart = () => {
@@ -149,7 +236,7 @@ function ProgressDetail() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 20px 100px 20px', maxWidth: 1000, margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', padding: '40px 20px 160px 20px', maxWidth: 1000, margin: '0 auto' }}>
       <div className="page-header">
         <Header variant="light" />
         <h1>PERSONALIZED HEALTH</h1>
@@ -159,18 +246,18 @@ function ProgressDetail() {
         ← Back to Dashboard
       </button>
 
-      <div className="form-container" style={{ marginBottom: 24 }}>
+      <div className="form-container fade-in" style={{ marginBottom: 24 }}>
         <h2 style={{ marginBottom: 12, fontSize: 24, fontWeight: 600 }}>12-Week Projection</h2>
         <div style={{ color: 'rgba(255,255,255,0.8)' }}>
           Estimated weekly change: <strong>{weeklyDelta > 0 ? '+' : ''}{weeklyDelta.toFixed(2)} lb/week</strong>
         </div>
       </div>
 
-      <div className="form-container" style={{ marginBottom: 24 }}>
+      <div className="form-container fade-in" style={{ marginBottom: 24 }}>
         <Chart />
       </div>
 
-      <div className="form-container" style={{ marginBottom: 24 }}>
+      <div className="form-container scale-in" style={{ paddingBottom: '48px', marginBottom: '40px' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -192,7 +279,7 @@ function ProgressDetail() {
       </div>
 
       <div className="footer">
-        <Header variant="dark" />
+        <Logo variant="dark" width={110} />
       </div>
     </div>
   )
