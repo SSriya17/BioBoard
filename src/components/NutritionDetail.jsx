@@ -15,17 +15,6 @@ function NutritionDetail() {
   // All meal recommendations now come ONLY from the ML model via the backend API
   // No frontend fallback database - ensures we always use the real dataset
 
-  useEffect(() => {
-    const data = localStorage.getItem('userData')
-    if (data) {
-      const parsed = JSON.parse(data)
-      setUserData(parsed)
-      loadNutritionData(parsed)
-    } else {
-      navigate('/')
-    }
-  }, [navigate])
-
   const loadNutritionData = useCallback(async (userData) => {
     setLoading(true)
     try {
@@ -64,6 +53,17 @@ function NutritionDetail() {
     }
   }, [])
 
+  useEffect(() => {
+    const data = localStorage.getItem('userData')
+    if (data) {
+      const parsed = JSON.parse(data)
+      setUserData(parsed)
+      loadNutritionData(parsed)
+    } else {
+      navigate('/')
+    }
+  }, [navigate, loadNutritionData])
+
   if (!userData || loading) {
     return (
       <div style={{ 
@@ -94,7 +94,7 @@ function NutritionDetail() {
             <div style={{
               width: '100%',
               height: '100%',
-              backgroundColor: '#4A90E2',
+              backgroundColor: '#ffffff',
               animation: 'progressBar 2s ease-in-out infinite'
             }}></div>
           </div>
@@ -129,30 +129,30 @@ function NutritionDetail() {
 
       {/* Nutritional Targets Section */}
       <div className="form-container fade-in" style={{ marginBottom: '32px' }}>
-        <h2 style={{ marginBottom: '24px', fontSize: '24px', fontWeight: '600' }}>Nutritional Targets</h2>
+        <h2 style={{ marginBottom: '24px', fontSize: '24px', fontWeight: '600', color: '#ffffff' }}>Nutritional Targets</h2>
         
         <div style={{ marginBottom: '32px' }}>
-          <div style={{ fontSize: '48px', fontWeight: '700', marginBottom: '8px' }}>{targets.calories}</div>
-          <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '16px' }}>Calories</div>
+          <div style={{ fontSize: '48px', fontWeight: '700', marginBottom: '8px', color: '#ffffff' }}>{targets.calories}</div>
+          <div style={{ fontSize: '18px', color: '#ffffff', marginBottom: '16px' }}>Calories</div>
           <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '4px', overflow: 'hidden' }}>
-            <div style={{ width: '60%', height: '100%', backgroundColor: '#4A90E2', borderRadius: '4px', animation: 'progressBar 1.5s ease-out forwards' }}></div>
+            <div style={{ width: '60%', height: '100%', backgroundColor: '#ffffff', borderRadius: '4px', animation: 'progressBar 1.5s ease-out forwards' }}></div>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
           <div className="stagger-1">
-            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>{targets.protein}g</div>
-            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>PROTEIN</div>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: '#ffffff' }}>{targets.protein}g</div>
+            <div style={{ fontSize: '14px', color: '#ffffff' }}>PROTEIN</div>
             <div style={{ width: '100%', height: '2px', backgroundColor: '#ffffff', marginTop: '12px' }}></div>
           </div>
           <div className="stagger-2">
-            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>{targets.carbs}g</div>
-            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>CARBS</div>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: '#ffffff' }}>{targets.carbs}g</div>
+            <div style={{ fontSize: '14px', color: '#ffffff' }}>CARBS</div>
             <div style={{ width: '100%', height: '2px', backgroundColor: '#ffffff', marginTop: '12px' }}></div>
           </div>
           <div className="stagger-3">
-            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>{targets.fats}g</div>
-            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Fats</div>
+            <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: '#ffffff' }}>{targets.fats}g</div>
+            <div style={{ fontSize: '14px', color: '#ffffff' }}>Fats</div>
             <div style={{ width: '100%', height: '2px', backgroundColor: '#ffffff', marginTop: '12px' }}></div>
           </div>
         </div>
@@ -169,7 +169,7 @@ function NutritionDetail() {
         ) : meals && meals.length > 0 ? (
           meals.map((meal, index) => (
           <div key={index} className="fade-in" style={{ marginBottom: index < meals.length - 1 ? '32px' : '16px', animationDelay: `${index * 0.15}s`, opacity: 0 }}>
-            <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#4A90E2' }}>{meal.type}</div>
+            <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#ffffff' }}>{meal.type}</div>
             <div style={{ fontSize: '18px', marginBottom: '16px', fontWeight: '500' }}>{meal.name}</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '12px' }}>
               <div style={{ padding: '12px', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
@@ -185,7 +185,7 @@ function NutritionDetail() {
                 <div style={{ fontSize: '18px', fontWeight: '700' }}>{meal.fats}g</div>
               </div>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#4A90E2', marginTop: '8px' }}>
+            <div style={{ fontSize: '16px', fontWeight: '600', color: '#ffffff', marginTop: '8px' }}>
               Total calories: {meal.calories} cal
             </div>
             {index < meals.length - 1 && (

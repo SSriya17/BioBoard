@@ -427,10 +427,47 @@ def get_progress_forecast():
                 current_weight = predicted_weight
             
             # Calculate weekly delta from first and last point
-            weekly_delta = round((points[-1]['weight'] - points[0]['weight']) / weeks, 2)
+            ml_weekly_delta = round((points[-1]['weight'] - points[0]['weight']) / weeks, 2)
+            
+            # Ensure the direction matches the fitness goal
+            # If ML prediction contradicts goal, use goal-based calculation
+            goal_requires_loss = goal in ['Weight Loss', 'Endurance']
+            goal_requires_gain = goal == 'Muscle Gain'
+            
+            # If ML prediction is in wrong direction for the goal, use fallback
+            if (goal_requires_loss and ml_weekly_delta > 0) or (goal_requires_gain and ml_weekly_delta < 0):
+                # Use fallback calculation to ensure correct direction
+                base_deltas = {
+                    'Weight Loss': -0.75,
+                    'Muscle Gain': 0.35,
+                    'Endurance': -0.25,
+                    'General Fitness': -0.10,
+                }
+                base = base_deltas.get(goal, -0.10)
+                
+                activity_adjustments = {
+                    'Sedentary': 0.8,
+                    'Light': 0.9,
+                    'Moderate': 1.0,
+                    'Active': 1.1,
+                    'Very Active': 1.2,
+                }
+                adjustment = activity_adjustments.get(activity_level, 1.0)
+                weekly_delta = base * adjustment
+                
+                # Recalculate points with correct weekly delta
+                points = []
+                for week in range(weeks + 1):
+                    points.append({
+                        'week': week,
+                        'weight': round(weight + (weekly_delta * week), 1)
+                    })
+            else:
+                # ML prediction is in correct direction, use it
+                weekly_delta = ml_weekly_delta
             
             return jsonify({
-                'weeklyDelta': weekly_delta,
+                'weeklyDelta': round(weekly_delta, 2),
                 'points': points
             })
         else:
