@@ -197,6 +197,7 @@ function ProgressDetail() {
         {points.map((p, i) => {
           const cx = xScale(p.week)
           const cy = yScale(p.weight)
+          const isHovered = hoverIdx === i
           return (
             <g key={i}>
               {/* Larger invisible hover target */}
@@ -208,7 +209,7 @@ function ProgressDetail() {
                 onMouseEnter={() => setHoverIdx(i)}
                 onMouseLeave={() => setHoverIdx((cur) => (cur === i ? null : cur))}
               />
-              <circle cx={cx} cy={cy} r="3" fill="#4A90E2" />
+              <circle cx={cx} cy={cy} r={isHovered ? "6" : "3"} fill="#4A90E2" />
             </g>
           )
         })}
@@ -224,8 +225,8 @@ function ProgressDetail() {
               return (
                 <>
                   <line x1={tx} y1={ty} x2={tx} y2={height - padding.bottom} stroke="rgba(74,144,226,0.4)" strokeDasharray="4 4" />
-                  <rect x={bgX} y={bgY} width="120" height="28" rx="4" fill="rgba(0,0,0,0.85)" stroke="rgba(255,255,255,0.2)" />
-                  <text x={bgX + 8} y={bgY + 18} fill="#ffffff" fontSize="12">{label}</text>
+                  <rect x={bgX} y={bgY} width="220" height="50" rx="4" fill="rgba(0,0,0,0.85)" stroke="rgba(255,255,255,0.2)" />
+                  <text x={bgX + 12} y={bgY + 32} fill="#ffffff" fontSize="28" fontWeight="700">{label}</text>
                 </>
               )
             })()}
