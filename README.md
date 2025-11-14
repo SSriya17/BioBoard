@@ -3,7 +3,7 @@ Health Fitness Web App
 
 A personalized health analytics web application that generates custom health plans including nutritional targets, meal suggestions, workout regimens, and progress forecasts using machine learning models.
 
-🌐 **Live Website:** [https://bioboard-jfrmuzsj0-sreya-gudipatis-projects.vercel.app/?_vercel_share=2O2YzAqv7IiHUiTRrc6QSKWt1zqyH45n](https://bioboard-jfrmuzsj0-sreya-gudipatis-projects.vercel.app/?_vercel_share=2O2YzAqv7IiHUiTRrc6QSKWt1zqyH45n)
+🌐 **Live Website:** [https://bio-board-seven.vercel.app/](https://bio-board-seven.vercel.app/)
 
 ## Features
 
